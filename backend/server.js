@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/goals', require('./routes/goalRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 
 app.use(errorHnalder);
 
