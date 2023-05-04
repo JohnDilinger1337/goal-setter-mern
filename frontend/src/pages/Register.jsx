@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useReducer } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
+import Spinner from '../components/Spinner';
+import { register, rest } from '../features/auth/authSlice';
 
 const Register = () => {
   const [formData, setFromData] = useState({
@@ -9,6 +14,23 @@ const Register = () => {
     password2: '',
   });
   const { name, email, password, password2 } = formData;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, isError, isSucess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSucess || user) {
+      navigate('/');
+    }
+    dispatch(rest());
+  }, [user, isError, isSucess, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFromData((prevState) => {
@@ -20,8 +42,29 @@ const Register = () => {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target);
+
+    if (password !== password2) {
+      toast.error('Password do not match!');
+      // setTimeout(() => {
+      //   toast.update(loading, {
+      //     render: 'All is good!',
+      //     type: 'success',
+      //     isLoading: false,
+      //   });
+      // }, 5000);
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      };
+      dispatch(register(userData));
+    }
   };
+
+  if (isLoading) {
+    <Spinner />;
+  }
 
   return (
     <>
@@ -42,6 +85,7 @@ const Register = () => {
               name="name"
               value={name}
               placeholder="Please enter your name!"
+              required
               onChange={onChange}
             />
           </div>
@@ -53,6 +97,7 @@ const Register = () => {
               name="email"
               value={email}
               placeholder="Please enter your email!"
+              required
               onChange={onChange}
             />
           </div>
@@ -64,6 +109,7 @@ const Register = () => {
               name="password"
               value={password}
               placeholder="Please enter password!"
+              required
               onChange={onChange}
             />
           </div>
@@ -75,6 +121,7 @@ const Register = () => {
               name="password2"
               value={password2}
               placeholder="renter password!"
+              required
               onChange={onChange}
             />
           </div>

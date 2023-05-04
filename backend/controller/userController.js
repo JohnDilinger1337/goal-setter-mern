@@ -43,7 +43,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Invalid given data');
   }
-  res.json({ message: 'register user' });
 });
 
 // @desc Login User
@@ -55,7 +54,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Check if the user exists in the database
   const user = await User.findOne({ email });
-  console.log(user.id, user._id);
+
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user.id,
