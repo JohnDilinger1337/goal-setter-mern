@@ -8,7 +8,7 @@ import { register, rest } from '../features/auth/authSlice';
 
 const Register = () => {
   const [formData, setFromData] = useState({
-    name: 'test',
+    name: '',
     email: '',
     password: '',
     password2: '',
