@@ -7,8 +7,8 @@ const User = require('../models/userModel');
 // @access Private
 
 const getGoals = asyncHandler(async (req, res) => {
-  const data = await Goal.find({ user: req.user.id });
-  res.status(200).json({ data });
+  const goals = await Goal.find({ user: req.user.id });
+  res.status(200).json(goals);
 });
 
 // @desc   Set Goal
@@ -40,7 +40,6 @@ const updateGoal = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Goal Not Found!');
   }
-
 
   // Check for user
   if (!req.user) {
